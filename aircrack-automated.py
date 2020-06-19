@@ -106,25 +106,23 @@ def mon_networks_for_handshake(mon_network_interface, ap_mac, ap_name, ap_ch):
 
 		filename = ""
 
+		#DELETE ALL FILES EXCEPT .CAP
 		try:
 			while True:
 				count = 1
 				filename = name + "-0" + str(count)
 				if os.path.isfile(filename + ".csv"):
-
 					filename_list.append(filename)
-
-					#DELETE ALL FILES EXCEPT .CAP
 					cleanup(filename + ".csv")
-					if os.path.isfile(filename + ".kismet.csv"):
-						cleanup(filename + ".kismet.csv")
-					if os.path.isfile(filename + ".kismet.netxml"):
-						cleanup(filename + ".kismet.netxml")
-					if os.path.isfile(filename + ".log.csv"):
-						cleanup(filename + ".log.csv")
+				if os.path.isfile(filename + ".kismet.csv"):
+					cleanup(filename + ".kismet.csv")
+				if os.path.isfile(filename + ".kismet.netxml"):
+					cleanup(filename + ".kismet.netxml")
+				if os.path.isfile(filename + ".log.csv"):
+					cleanup(filename + ".log.csv")
 
-					count = count + 1
-					break
+				count = count + 1
+				break
 		except:
 			print("An exception occured while deleting the files.")
 
@@ -132,7 +130,7 @@ def mon_networks_for_handshake(mon_network_interface, ap_mac, ap_name, ap_ch):
 
 def reset_network_settings(mon_network_interface):
 
-	proc_stop_airmon = subprocess.Popen(["x-terminal-emulator", "sudo", "-e", "sudo airmon-ng stop" + mon_network_interface])
+	proc_stop_airmon = subprocess.Popen(["x-terminal-emulator", "sudo", "-e", " airmon-ng stop" + mon_network_interface])
 	proc_restart_network_manager = subprocess.Popen(["x-terminal-emulator", "sudo", "-e", "systemctl restart network-manager"])
 
 def crack(ap_mac, filename_list):
@@ -193,7 +191,7 @@ print("Handshakes captured from: " + captured_handshakes_string)
 reset_network_settings(mon_network_interface)
 
 #CRACK THE HANDSHAKES
-crack(ap_mac, ap_ch)
+crack(ap_mac, ap_name)
 
 #DELETE GENERATED FILES
 cleanup(found_networks_csv)
