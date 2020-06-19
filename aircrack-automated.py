@@ -1,13 +1,12 @@
 import os, sys, subprocess, time, csv
 
-
 def start_airmon(network_interface):
-	subprocess.call(["x-terminal-emulator", "-e", "airmon-ng"])
-	subprocess.call(["x-terminal-emulator", "-e", "airmon-ng check kill"])
-	subprocess.call(["x-terminal-emulator", "-e", "airmon-ng start " + a])
+	subprocess.call(["x-terminal-emulator", "sudo", "-e", "airmon-ng"])
+	subprocess.call(["x-terminal-emulator", "sudo", "-e", "airmon-ng check kill"])
+	subprocess.call(["x-terminal-emulator", "sudo", "-e", "airmon-ng start " + network_interface])
 	return network_interface + "mon"
 
-def mon_networks(timeout,mon_network_interface):
+def mon_networks(timeout, mon_network_interface):
 	filename = "output_airmon"
 	proc = subprocess.Popen(["x-terminal-emulator", "-e", "airodump-ng " + mon_network_interface + " -w " + filename + " --output-format csv"])
 	wait_timeout(proc, timeout)
